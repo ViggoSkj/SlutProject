@@ -24,7 +24,7 @@ if (isset($_POST) && isset($_POST["email"]) && isset($_POST["username"]) && isse
 
         $userVerificationToken = UserVerificationToken::CreateToken($user->GetId());
 
-        mail($user->Email, "verification", "https://labb.vgy.se/....test?token=".$userVerificationToken->UUID);
+        //mail($user->Email, "verification", "https://labb.vgy.se/....test?token=".$userVerificationToken->UUID);
     } else {
         die("somthing whent wrong.");
     }

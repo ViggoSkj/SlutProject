@@ -1,6 +1,5 @@
 <?php
-session_start();
-require 'User.php';
+require_once 'User.php';
 
 if (!User::SessionUser()) {
     header("Location: login.php");

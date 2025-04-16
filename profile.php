@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 include_once "login-guard.php";
 
@@ -14,5 +15,11 @@ include_once "login-guard.php";
 <body>
     <?php include "header.php"?>
     
+    <main class="center-page">
+        <form action="/create-reset-password.php" method="POST">
+            <button>Reset password</button>
+        </form>
+    </main>
+
 </body>
 </html>

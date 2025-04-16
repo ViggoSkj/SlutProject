@@ -12,7 +12,7 @@ class PasswordResetToken extends DatabaseObject
     {
         $db = Database::GetInstance();
 
-        $stmt = $db->PDO->prepare("SELECT * FROM PasswordResetToken WHERE uuid=:uuid");
+        $stmt = $db->PDO->prepare("SELECT * FROM userpasswordresettoken WHERE uuid=:uuid");
         $stmt->execute([
             "uuid" => $uuid,
         ]);
@@ -31,7 +31,7 @@ class PasswordResetToken extends DatabaseObject
 
         $token = new PasswordResetToken(uuidv4(), $userId, time() + 3600 * 24);
 
-        $stmt = $db->PDO->prepare("INSERT PasswordResetToken (uuid, userId, expires) VALUE(:uuid, :userId, :expires)");
+        $stmt = $db->PDO->prepare("INSERT userpasswordresettoken (uuid, userId, expires) VALUE(:uuid, :userId, :expires)");
         $stmt->execute([
             "uuid" => $token->UUID,
             "userId" => $token->UserId,
@@ -57,7 +57,7 @@ class PasswordResetToken extends DatabaseObject
 
     public function Destory()
     {
-        $stmt = $this->m_database->PDO->prepare("DELETE FROM PasswordResetToken WHERE uuid=:uuid");
+        $stmt = $this->m_database->PDO->prepare("DELETE FROM userpasswordresettoken WHERE uuid=:uuid");
         $stmt->execute(["uuid" => $this->UUID]);
     }
 }

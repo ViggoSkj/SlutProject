@@ -13,11 +13,9 @@ if (isset($_POST) && isset($_POST["email"]) && isset($_POST["password"])) {
         header("Location: /login.php?error=password and email does not match");
         die();
     }
-
+    
     if (!$user->VerifyPassword($password)) {
-        
-        var_dump(password_verify("test", password_hash("test", PASSWORD_BCRYPT)));
-        die();
+        header("Location: /login.php?error=password and email does not match");
     }
 
     $user->MakeSessionUser();
@@ -29,4 +27,4 @@ if (isset($_POST) && isset($_POST["email"]) && isset($_POST["password"])) {
         header("Location: /verification-needed.php");
         die();
     }
-}
+} 
