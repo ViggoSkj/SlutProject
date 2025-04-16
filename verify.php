@@ -2,28 +2,56 @@
 require_once "UserVerificationToken.php";
 require_once "User.php";
 
-if (isset($_GET["token"]))
-{
+if (isset($_GET["token"])) {
     $tokenId = $_GET["token"];
     $token = UserVerificationToken::GetToken($tokenId);
 
-    if (!$token)
-    {
-        die("not a valid token");
-    }
-    
-    if ($token->IsExpired())
-    {
+    $errorMessage = "";
+    $successMessage = "";
+
+    if (!$token) {
+        $errorMessage = "Invalid verification link.";
+    } else if ($token->IsExpired()) {
         // remove user since token is expired
         $user = User::GetUser($token->UserId);
         $user->DeleteUser();
         $token->Destory();
-        die("token expired and account deleted");
+        $errorMessage = "Verification link is expired.";
+    } else {
+        $user = User::GetUser($token->UserId);
+        $user->VerifyUser();
+        $user->SaveUser();
+        $token->Destory();
+
+        $successMessage = "Account verified.";
     }
-    
-    $user = User::GetUser($token->UserId);
-    $user->VerifyUser();
-    $user->SaveUser();
-    $token->Destory();
+
 }
 
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <?php include "head.php" ?>
+    <title>Document</title>
+</head>
+
+<body>
+    <?php include "header.php" ?>
+    <main class="center-page">
+        <section class="flex-centering">
+            <?php if ($errorMessage != "") { ?>
+                <p class="color-neg"><?php echo $errorMessage ?></p>
+            <?php } ?>
+            
+            <?php if ($successMessage != "") { ?>
+                <p class="color-success"><?php echo $successMessage ?></p>
+                <button href="/">Home</button>
+            <?php } ?>
+        </section>
+    </main>
+</body>
+
+</html>

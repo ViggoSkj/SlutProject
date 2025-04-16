@@ -1,3 +1,21 @@
+:root {
+    /* pallete: https://flatuicolors.com/palette/se */
+    --gray-dark: #1e272e;
+    --gray: #485460;
+    --gray-light: #808e9b;
+
+    --red: #ff5e57;
+    --red-dark: #ff3f34;
+
+    --blue: #575fcf;
+    --blue-dark: #3c40c6;
+    --blue-light: #0fbcf9;
+    
+    --green: #0be881;
+
+    --light: #d2dae2;
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -5,16 +23,130 @@
 }
 
 body {
-    background-color: rgb(50, 48, 54);
+    background-color: var(--gray-dark);
     color: white;
-    font-family: monospace;
+    font-family: "Roboto", sans-serif;
 }
 
+/* #region dom elements */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Space Grotesk", "Roboto", sans-serif;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+main {
+    margin: 3rem;
+}
+
+main.center {
+    width: fit-content;
+    margin-inline: auto;
+}
+
+main.center-page {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+section,
+form {
+    background-color: var(--gray);
+    padding: 2rem;
+    border-radius: 4px;
+}
+
+section>*:first-child,
+form>*:first-child {
+    margin-top: 0;
+}
+
+section>*:last-child,
+form>*:last-child {
+    margin-bottom: 0;
+}
+
+section>*,
+form>* {
+    margin-block: 1rem;
+}
+
+input {
+    padding: 0.25rem 0.5rem;
+    border: 3px var(--light) solid;
+    border-radius: 4px;
+}
+
+input:focus {
+    border: 3px var(--blue) solid;
+    outline: 0;
+}
+
+.button,
+button {
+    display: block;
+    width: fit-content;
+    border: 3px solid transparent;
+    border-radius: 4px;
+    height: auto;
+    background-color: black;
+    color: white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    font-size: medium;
+    cursor: pointer;
+    font-weight: bold;
+
+    font-family: "Space Grotesk", "Roboto", sans-serif;
+
+    background-color: var(--gray-light);
+    border-color: var(--gray);
+}
+
+.button-pos {
+    background-color: var(--blue);
+    border-color: var(--blue-dark);
+}
+
+.button-neg {
+    background-color: var(--red);
+    border-color: var(--red-dark);
+
+}
+
+/* #endregion dom elements */
+
+
+/* #region header */
+
 header {
-    background-color: rgb(38, 37, 40);
+    background-color: var(--gray-dark);
     display: flex;
     align-items: center;
     padding: 1rem;
+    box-shadow: 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.5);
 }
 
 header h1 {
@@ -25,18 +157,37 @@ header nav {
     display: flex;
     align-items: center;
     gap: 2rem;
+    flex: 1;
 }
 
-.button,
-header nav a {
-    display: block;
-    width: fit-content;
-    background-color: black;
-    color: white;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
+/* #endregion header */
+
+
+.button-row {
+    display: flex;
+    gap: 1rem;
 }
 
-main {
-    margin: 3rem;
+.flex-centering
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    justify-content: center;
+}
+
+.color-neg
+{
+    color: var(--red);
+}
+
+.color-pos
+{
+    color: var(--blue-light);
+}
+
+.color-success
+{
+    color: var(--green);
 }

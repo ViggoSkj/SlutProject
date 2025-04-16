@@ -5,17 +5,17 @@ $loggedIn = User::SessionUser() != null;
 ?>
 
 <header>
-    <h1>Generic Gambing Site</h1>
+    <h1><a href="/">Generic Gambing Site</a></h1>
 
     <nav>
-        <a href="/index.php">Home</a>
+        <a href="/index.php" class="button">Home</a>
     </nav>
-    <div>
+    <div class="button-row">
         <?php if ($loggedIn) { ?>
-            <a href="/logout.php">log out</a>
-            <a href="/profile.php">Profile</a>
+            <a href="/logout.php" class="button button-neg">Log out</a>
+            <a href="/profile.php" class="button">Profile</a>
         <?php } else { ?>
-            <a href="/logout.php">log in/sign up</a>
+            <a href="/logout.php" class="button">Log in / Sign up</a>
         <?php } ?>
     </div>
 </header>
