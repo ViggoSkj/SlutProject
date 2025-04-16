@@ -1,0 +1,42 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(50, 48, 54);
+    color: white;
+    font-family: monospace;
+}
+
+header {
+    background-color: rgb(38, 37, 40);
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+header h1 {
+    margin-right: 4rem;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.button,
+header nav a {
+    display: block;
+    width: fit-content;
+    background-color: black;
+    color: white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+}
+
+main {
+    margin: 3rem;
+}
