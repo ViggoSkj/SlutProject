@@ -1,6 +1,7 @@
 <?php
 
 require_once "db.php";
+require_once "Lobby.php";
 
 class User extends DatabaseObject
 {
@@ -71,7 +72,7 @@ class User extends DatabaseObject
         return $stmt->rowCount() > 0;
     }
 
-    public function __construct($email, $username, $password, $verified = false, $id = -1)
+    public function __construct($email, $username, $passwordHash, $verified = false, $id = -1)
     {
         parent::__construct();
 
@@ -79,7 +80,27 @@ class User extends DatabaseObject
         $this->m_verified = $verified;
         $this->Email = $email;
         $this->Username = $username;
-        $this->SetPassword(($password));
+        $this->m_passwordHash = $passwordHash;
+    }
+
+    public function GetActiveLobby(): Lobby | null
+    {
+        $stmt = $this->m_database->PDO->prepare("
+        SELECT 
+            Lobby.Id as lobbyId,
+            Lobby.gameId as gameId 
+        FROM LobbyOccupant
+        INNER JOIN Lobby on LobbyOccupant.lobbyId = Lobby.Id
+        ");
+
+        $stmt->execute();
+
+        if($stmt->rowCount() == 0)
+            return null;
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return new Lobby($result["gameId"], $result["lobbyId"]);
     }
 
     public function GetId(): int
