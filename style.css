@@ -161,6 +161,19 @@ header nav {
     flex: 1;
 }
 
+#game-header {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+#game-header>a {
+    margin-left: auto;
+}
+
+#game-header>a>img {
+    width: 80px;
+}
+
 /* #endregion header */
 
 .button-row>* {

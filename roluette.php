@@ -22,7 +22,7 @@ $users = $lobby->Users();
 </head>
 
 <body>
-    <?php include "header.php" ?>
+    <?php include "game-header.php" ?>
     <main class="center-page">
     </main>
 
