@@ -20,6 +20,7 @@ if(isset($_GET["game"]))
             die("invalid game type");
     }
 
+    $user->LeaveLobby();
     $lobby = Lobby::JoinAvailableLobby($user->GetId(), $type);
 
     header("Location: ".GameType::urls[$type]);

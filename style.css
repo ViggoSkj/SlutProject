@@ -73,6 +73,7 @@ main.center-page {
 
 section,
 form {
+    margin: 1rem;
     background-color: var(--gray);
     padding: 2rem;
     border-radius: 4px;

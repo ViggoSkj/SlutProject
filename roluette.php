@@ -6,8 +6,31 @@ include_once "login-guard.php";
 include_once "User.php";
 include_once "Lobby.php";
 
-$lobby= User::SessionUser()->GetActiveLobby();
+$lobby = User::SessionUser()->GetActiveLobby();
 
 $users = $lobby->Users();
+?>
 
-var_dump($users);
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <?php include "head.php" ?>
+    <link rel="stylesheet" href="/public/styles/roluette.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <?php include "header.php" ?>
+    <main class="center-page">
+    </main>
+
+    <div id="lobby-occupants">
+        <?php foreach ($users as $user) { ?>
+            <img src="/public/images/user.svg" />
+        <?php } ?>
+    </div>
+</body>
+
+</html>

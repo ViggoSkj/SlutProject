@@ -2,6 +2,7 @@
 
 require_once "db.php";
 require_once "Lobby.php";
+require_once "Wallet.php";
 
 class User extends DatabaseObject
 {
@@ -91,9 +92,12 @@ class User extends DatabaseObject
             Lobby.gameId as gameId 
         FROM LobbyOccupant
         INNER JOIN Lobby on LobbyOccupant.lobbyId = Lobby.Id
+        WHERE LobbyOccupant.userId=:userId
         ");
 
-        $stmt->execute();
+        $stmt->execute([
+            "userId" => $this->m_id
+        ]);
 
         if($stmt->rowCount() == 0)
             return null;
@@ -101,6 +105,19 @@ class User extends DatabaseObject
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return new Lobby($result["gameId"], $result["lobbyId"]);
+    }
+
+    public function GetWallet(): Wallet
+    {
+        $wallet = Wallet::GetUsersWallet($this->m_id);
+
+        if ($wallet == null)
+        {
+            $wallet = new Wallet($this->m_id, 1000, 0);
+            $wallet->Save();
+        }
+
+        return $wallet;
     }
 
     public function GetId(): int
@@ -146,6 +163,19 @@ class User extends DatabaseObject
     {
         $stmt = $this->m_database->PDO->prepare("DELETE FROM AppUser WHERE id=:id");
         $stmt->execute(["id" => $this->m_id]);
+    }
+
+    public function LeaveLobby() : bool {
+        $activeLobby = $this->GetActiveLobby();
+
+        if ($activeLobby == null)
+        {
+            return false;
+        }
+
+        $activeLobby->Leave($this->m_id);
+
+        return true;
     }
 
     private function InsertUser()

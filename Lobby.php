@@ -102,6 +102,15 @@ class Lobby extends DatabaseObject
         $occupant = new LobbyOccupant($this->Id, $userId);
         $occupant->Save();
     }
+
+    public function Leave($userId)
+    {
+        $stmt = $this->m_database->PDO->prepare("DELETE FROM LobbyOccupant WHERE userId=:userId AND lobbyId=:lobbyId");
+        $stmt->execute([
+            "userId" => $userId,
+            "lobbyId" => $this->Id
+        ]);
+    }
 }
 
 class LobbyOccupant extends DatabaseObject

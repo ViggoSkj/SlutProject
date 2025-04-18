@@ -23,8 +23,8 @@ CREATE TABLE UserPasswordResetToken (
 CREATE TABLE Wallet (
     id integer unsigned PRIMARY KEY AUTO_INCREMENT,
     userId integer unsigned NOT NULL,
-    amount FLOAT NOT NULL DEFAULT 0.0,
-    dailyRewardClaimed BOOLEAN NOT NULL DEFAULT FALSE,
+    amount integer unsigned NOT NULL,
+    lastDailyRewardClaimed integer unsigned NOT NULL,
     FOREIGN KEY (userId) REFERENCES AppUser(id) ON DELETE CASCADE
 );
 

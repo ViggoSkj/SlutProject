@@ -1,21 +1,31 @@
 <?php
 require_once "User.php";
-$loggedIn = User::SessionUser() != null;
-
+$user = User::SessionUser();
+$loggedIn = $user != null;
+$wallet = $user->GetWallet();
 ?>
 
 <header>
     <h1><a href="/">Generic Gambing Site</a></h1>
 
-    <nav>
-        <a href="/index.php" class="button">Home</a>
-    </nav>
-    <div class="button-row">
-        <?php if ($loggedIn) { ?>
+    <?php if ($loggedIn) /* Logged in */ { ?>
+        <nav>
+            <a href="/index.php" class="button">Home</a>
+        </nav>
+        <div class="button-row">
+            <div>
+                <span><?php echo $wallet->Amount ?></span>
+                <img src="/public/images/chip.svg" />
+            </div>
             <a href="/logout.php" class="button button-neg">Log out</a>
             <a href="/profile.php" class="button">Profile</a>
-        <?php } else { ?>
+        </div>
+    <?php } else /* Not logged in */ { ?>
+        <nav>
+            <a href="/index.php" class="button">Home</a>
+        </nav>
+        <div class="button-row">
             <a href="/logout.php" class="button">Log in / Sign up</a>
-        <?php } ?>
-    </div>
+        </div>
+    <?php } ?>
 </header>
