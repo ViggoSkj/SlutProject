@@ -66,6 +66,7 @@ CREATE TABLE ChatMessage (
 CREATE TABLE GameEvent (
     id integer unsigned PRIMARY KEY AUTO_INCREMENT,
     gameId integer unsigned NOT NULL,
+    eventType VARCHAR(100) NOT NULL,
     content VARCHAR(1000) NOT NULL,
     FOREIGN KEY (gameId) REFERENCES Game(id) ON DELETE CASCADE
 );

@@ -88,13 +88,17 @@ class Lobby extends DatabaseObject
 
         $users = [];
 
-        foreach($results as $result)
-        {
+        foreach ($results as $result) {
             $user = new User($result["email"], $result["username"], $result["passwordHash"], $result["verified"], $result["id"]);
             array_push($users, $user);
         }
 
         return $users;
+    }
+
+    public function GetGame(): Game
+    {
+        return Game::GetGame($this->GameId);
     }
 
     public function Join($userId)

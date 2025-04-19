@@ -2,7 +2,6 @@
 require_once "User.php";
 $user = User::SessionUser();
 $loggedIn = $user != null;
-$wallet = $user->GetWallet();
 ?>
 
 <header>
@@ -14,7 +13,7 @@ $wallet = $user->GetWallet();
         </nav>
         <div class="button-row">
             <div>
-                <span><?php echo $wallet->Amount ?></span>
+                <span><?php echo $user->GetWallet()->Amount ?></span>
                 <img src="/public/images/chip.svg" />
             </div>
             <a href="/logout.php" class="button button-neg">Log out</a>
