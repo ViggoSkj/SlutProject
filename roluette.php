@@ -22,16 +22,41 @@ $users = $lobby->Users();
     <title>Document</title>
 </head>
 
-<body>
+<body class="game-layout">
     <?php include "game-header.php" ?>
-    <main class="center-page">
-    </main>
+    <div id="social">
+        <section id="chat">
 
-    <div id="lobby-occupants">
-        <?php foreach ($users as $user) { ?>
-            <img src="/public/images/user.svg" />
-        <?php } ?>
+        </section>
+        <div id="lobby-occupants">
+            <?php foreach ($users as $user) { ?>
+                <img src="/public/images/user.svg" />
+            <?php } ?>
+        </div>
     </div>
+
+    <main>
+        <section id="game">
+            <div id="roluette-bar">
+                <?php for ($i = 0; $i < 37; $i++) { ?>
+                    <p><?php echo $i; ?></p>
+                <?php } ?>
+            </div>
+            <div id="roluette-pointer"></div>
+        </section>
+        <section id="controls" class="button-row">
+            <p>Red</p>
+            <input type="radio" name="color" id="roluette-color-red">
+            <p>Green</p>
+            <input type="radio" name="color" id="roluette-color-green">
+            <p>Black</p>
+            <input type="radio" name="color" id="roluette-color-black">
+            <input id="bet-amount" placeholder="amount">
+            <button id="bet">
+                Bet
+            </button>
+        </section>
+    </main>
 </body>
 
 </html>

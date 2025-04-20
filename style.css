@@ -142,12 +142,11 @@ button {
 
 /* #region header */
 
+
 header {
-    background-color: var(--gray-dark);
     display: flex;
     align-items: center;
     padding: 1rem;
-    box-shadow: 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.5);
 }
 
 header h1 {
@@ -161,9 +160,14 @@ header nav {
     flex: 1;
 }
 
+#header {
+    background-color: var(--gray-dark);
+    box-shadow: 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.5);
+}
+
 #game-header {
-    background-color: transparent;
-    box-shadow: none;
+    width: 100%;
+    grid-column: span 2;
 }
 
 #game-header>a {
@@ -213,6 +217,42 @@ header nav {
     height: 8rem;
     align-items: center;
     justify-content: center;
+}
+
+.game-layout {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    height: 100vh;
+    grid-template-rows: 10rem auto;
+}
+
+.game-layout main {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+}
+
+#game {
+    flex-grow: 1;
+}
+
+#social {
+    display: flex;
+    flex-direction: column;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+}
+
+#controls
+{
+    align-items: center;
+    justify-content: center;
+}
+
+#chat {
+    flex-grow: 1;
 }
 
 /* #endregion Specific */

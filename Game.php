@@ -44,17 +44,22 @@ class Game extends DatabaseObject
 
     public function Events(): array
     {
-        $stmt = $this->m_database->PDO->prepare("SELECT * FROM GameEvent WHERE gameId=:gameId");
+        return $this->EventsAfter(-1);
+    }
+
+    public function EventsAfter(int $eventId): array
+    {
+        $stmt = $this->m_database->PDO->prepare("SELECT * FROM GameEvent WHERE gameId=:gameId AND id>:id");
         $stmt->execute([
-            "gameId" => $this->Id
+            "gameId" => $this->Id,
+            "id" => $eventId,
         ]);
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $events = [];
-
         foreach ($results as $result) {
-            array_push($events, new GameEvent($this->Id, $result["eventType"], json_decode($result["content"])));
+            array_push($events, new GameEvent($this->Id, $result["eventType"], unserialize($result["content"]), $result["id"]));
         }
 
         return $events;
@@ -66,14 +71,13 @@ class GameEvent extends DatabaseObject
     public int $Id;
     public int $GameId;
     public string $EventType;
-    public array $Content;
+    public $Content;
 
-    public function __construct(int $gameId, string $eventType, array $content)
+    public function __construct(int $gameId, string $eventType, $content, $id = -1)
     {
         parent::__construct();
 
-
-        $this->Id = -1;
+        $this->Id = $id;
         $this->GameId = $gameId;
         $this->EventType = $eventType;
         $this->Content = $content;
@@ -86,7 +90,7 @@ class GameEvent extends DatabaseObject
             $stmt->execute([
                 "gameId" => $this->GameId,
                 "eventType" => $this->EventType,
-                "content" => json_encode($this->Content)
+                "content" => serialize($this->Content)
             ]);
         } else {
             // will not happen so wont implement

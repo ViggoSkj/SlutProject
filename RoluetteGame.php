@@ -49,33 +49,19 @@ class RoluetteGame extends Game
         parent::__construct(GameType::ROLUETTE, $id);
     }
 
-    public function GetState(): RoluetteGameState
-    {
-        $events = $this->Events();
-
-        $last = count($events) - 1;
-        if ($last != -1 && $events[$last]->EventType == RoluetteEventSpinResult::EVENT_NAME) {
-            return RoluetteGameState::SPUN;
-        }
-
-        return RoluetteGameState::BETTING;
-    }
-
-    public function GetSpinResult(): ?RoluetteEventSpinResult
-    {
-        $events = $this->Events();
-        $last = count($events) - 1;
-        if ($events[$last]->EventType == RoluetteEventBet::EVENT_NAME) {
-            return null;
-        }
-
-        return $events[$last];
-    }
-
     public function PlaceBet(int $userId, int $amount, RoluetteBet $bet)
     {
         $event = new RoluetteEventBet($this->Id, $userId, $amount, $bet);
         $event->Save();
+    }
+
+    public function ActiveBets(): array
+    {
+        $nextToLastSpin = RoluetteEventSpinResult::NextToLastSpin($this->Id);   
+        $nextToLastSpinId = -1;
+        if ($nextToLastSpin != null)
+            $nextToLastSpinId = $nextToLastSpin->Id;
+        return RoluetteEventBet::BetsAfter($this->Id, $nextToLastSpinId);
     }
 
     public function Spin()
@@ -85,23 +71,24 @@ class RoluetteGame extends Game
     }
 
     public function CalculatePayout(int $userId): int
-    {
-        $result = $this->GetSpinResult();
+    {   
+        $latestSpin = RoluetteEventSpinResult::LastSpin($this->Id);
 
-        if ($result == 0)
+        if ($latestSpin == null)
             return 0;
 
-        $events = $this->Events();
+        $bets = $this->ActiveBets();
 
-        foreach ($events as $event) {
-            if ($event->EventType == RoluetteEventBet::EVENT_NAME) {
-                $bet = $event->bet;
-                if ($event->userId == $userId) {
-                    $color = RoluetteGame::INDEX_TO_COLOR[$result->Index];
+        foreach($bets as $bet)
+        {
+            if ($bet->Content["userId"] == $userId)
+            {
+                $betColor = $bet->Content["bet"]->Color;
+                $resultColor = RoluetteGame::INDEX_TO_COLOR[$latestSpin->Index];
 
-                    if ($bet->color == $color){
-                        return $bet->amount;
-                    }
+                if ($betColor == $resultColor)
+                {
+                    return $bet->Content["amount"] * 2;
                 }
             }
         }
@@ -114,7 +101,29 @@ class RoluetteEventBet extends GameEvent
 {
     public const EVENT_NAME = "roluette_bet";
 
-    public function __construct(int $gameId, int $userId, int $amount, RoluetteBet $bet)
+    static public function BetsAfter($gameId, $eventId) : array
+    {
+        $db = Database::GetInstance();
+        $stmt = $db->PDO->prepare("SELECT * FROM GameEvent WHERE gameId=:gameId AND eventType=:eventType AND id>:id ORDER BY id");
+        $stmt->execute([
+            "gameId" => $gameId,
+            "eventType" => RoluetteEventBet::EVENT_NAME,
+            "id" => $eventId,
+        ]);
+
+        $bets = [];
+        $reuslts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach($reuslts as $result)
+        {
+            $content = unserialize($result["content"]);
+            array_push($bets, new RoluetteEventBet($gameId, $content["userId"], $content["amount"], $content["bet"], $result["id"]));
+        }
+
+        return $bets;
+    }
+
+    public function __construct(int $gameId, int $userId, int $amount, RoluetteBet $bet, int $id=-1)
     {
         $content = [
             "userId" => $userId,
@@ -122,7 +131,7 @@ class RoluetteEventBet extends GameEvent
             "bet" => $bet,
         ];
 
-        parent::__construct($gameId, RoluetteEventBet::EVENT_NAME, $content);
+        parent::__construct($gameId, RoluetteEventBet::EVENT_NAME, $content, $id);
     }
 }
 
@@ -130,16 +139,56 @@ class RoluetteEventSpinResult extends GameEvent
 {
     public const EVENT_NAME = "roluette_spin_result";
     public int $Index;
+    public int $Time;
 
-    public function __construct(int $gameId, int $index)
+    static public function LastSpin($gameId): ?RoluetteEventSpinResult
     {
-        $content = [
-            "index" => $index,
-        ];
+        $db = Database::GetInstance();
+        $stmt = $db->PDO->prepare("SELECT * FROM GameEvent WHERE gameId=:gameId AND eventType=:eventType ORDER BY id DESC LIMIT 1");
+        $stmt->execute([
+            "gameId" => $gameId,
+            "eventType" => RoluetteEventSpinResult::EVENT_NAME
+        ]);
+
+        if ($stmt->rowCount() == 0)
+            return null;
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $content = unserialize($result["content"]);
+        return new RoluetteEventSpinResult($gameId, $content["index"], $content["time"], $result["id"]);
+    }
+
+    static public function NextToLastSpin($gameId): ?RoluetteEventSpinResult
+    {
+        $db = Database::GetInstance();
+        $stmt = $db->PDO->prepare("SELECT * FROM GameEvent WHERE gameId=:gameId AND eventType=:eventType ORDER BY id DESC LIMIT 1 OFFSET 1");
+        $stmt->execute([
+            "gameId" => $gameId,
+            "eventType" => RoluetteEventSpinResult::EVENT_NAME
+        ]);
+
+        if ($stmt->rowCount() == 0)
+            return null;
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $content = unserialize($result["content"]);
+        return new RoluetteEventSpinResult($gameId, $content["index"], $content["time"], $result["id"]);
+    }
+
+    public function __construct(int $gameId, int $index, int $time = -1, int $id=-1)
+    {
+        if ($time == -1)
+            $time = time();
 
         $this->Index = $index;
+        $this->Time = $time;
 
-        parent::__construct($gameId, RoluetteEventSpinResult::EVENT_NAME, $content);
+        $content = [
+            "index" => $this->Index,
+            "time" => $this->Time
+        ];
+
+        parent::__construct($gameId, RoluetteEventSpinResult::EVENT_NAME, $content, $id);
     }
 }
 
@@ -155,10 +204,4 @@ class RoluetteBet
     {
         $this->Color = $color;
     }
-}
-
-enum RoluetteGameState:string
-{
-    case BETTING = "roluette_betting";
-    case SPUN = "roluette_spun";
 }
