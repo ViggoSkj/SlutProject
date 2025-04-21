@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-header('Content-Type: application/json');
-
-
-
 include "login-guard.php";
 include "api-util.php";
 include "RoluetteGame.php";
@@ -60,8 +56,6 @@ if ($lastSpin != null) {
 
 $response["timeSinceLastSpin"] = -1;
 
-
-
 if ($spin == false) {
     $occupants = $lobby->Users();
     $bets = $roluette->ActiveBets();
@@ -100,7 +94,9 @@ foreach ($events as $event) {
 
     switch ($eventType) {
         case (RoluetteEventSpinResult::EVENT_NAME): {
-            $response["payout"] = $roluette->CalculatePayout($user->GetId());
+            $payout = $roluette->CalculatePayout($user->GetId());
+            $response["payout"] = $payout;
+            $user->GetWallet()->Deposit($payout);
             array_push($response["events"], $event);
             break;
         }

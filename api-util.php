@@ -1,5 +1,7 @@
 <?php
 
+header('Content-Type: application/json');
+
 // Set headers for JSON response
 function BadReqeust(string $message)
 {

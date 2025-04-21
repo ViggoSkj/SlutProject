@@ -28,11 +28,21 @@ if ($lobby == null)
 $game = $lobby->GetGame();
 
 if ($game == null)
-BadReqeust("no game");
+    BadReqeust("no game");
 
 if ($game->GameType != GameType::ROLUETTE)
     BadReqeust("wrong gametype");
 
-$roluette = new RoluetteGame($game->Id);
+if ($user->GetWallet()->TryWithdraw($amount)) {
+    $roluette = new RoluetteGame($game->Id);
 
-$roluette->PlaceBet($user->GetId(), $amount, new RoluetteBet($color));
+    $roluette->PlaceBet($user->GetId(), $amount, new RoluetteBet($color));
+
+    SendResponse([
+        "betPlaced" => true
+    ]);
+} else {
+    SendResponse([
+        "betPlaced" => false
+    ]);
+}

@@ -57,7 +57,7 @@ class RoluetteGame extends Game
 
     public function ActiveBets(): array
     {
-        $nextToLastSpin = RoluetteEventSpinResult::NextToLastSpin($this->Id);   
+        $nextToLastSpin = RoluetteEventSpinResult::NextToLastSpin($this->Id);
         $nextToLastSpinId = -1;
         if ($nextToLastSpin != null)
             $nextToLastSpinId = $nextToLastSpin->Id;
@@ -71,29 +71,31 @@ class RoluetteGame extends Game
     }
 
     public function CalculatePayout(int $userId): int
-    {   
+    {
         $latestSpin = RoluetteEventSpinResult::LastSpin($this->Id);
 
         if ($latestSpin == null)
             return 0;
 
         $bets = $this->ActiveBets();
+        $amount = 0;
 
-        foreach($bets as $bet)
-        {
-            if ($bet->Content["userId"] == $userId)
-            {
+        foreach ($bets as $bet) {
+            if ($bet->Content["userId"] == $userId) {
                 $betColor = $bet->Content["bet"]->Color;
                 $resultColor = RoluetteGame::INDEX_TO_COLOR[$latestSpin->Index];
 
-                if ($betColor == $resultColor)
-                {
-                    return $bet->Content["amount"] * 2;
+                if ($betColor == $resultColor) {
+                    if ($betColor == RoluetteBet::GREEN) {
+                        $amount += $bet->Content["amount"] * 35;
+                    } else {
+                        $amount += $bet->Content["amount"] * 2;
+                    }
                 }
             }
         }
 
-        return 0;
+        return $amount;
     }
 }
 
@@ -101,7 +103,7 @@ class RoluetteEventBet extends GameEvent
 {
     public const EVENT_NAME = "roluette_bet";
 
-    static public function BetsAfter($gameId, $eventId) : array
+    static public function BetsAfter($gameId, $eventId): array
     {
         $db = Database::GetInstance();
         $stmt = $db->PDO->prepare("SELECT * FROM GameEvent WHERE gameId=:gameId AND eventType=:eventType AND id>:id ORDER BY id");
@@ -114,8 +116,7 @@ class RoluetteEventBet extends GameEvent
         $bets = [];
         $reuslts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach($reuslts as $result)
-        {
+        foreach ($reuslts as $result) {
             $content = unserialize($result["content"]);
             array_push($bets, new RoluetteEventBet($gameId, $content["userId"], $content["amount"], $content["bet"], $result["id"]));
         }
@@ -123,7 +124,7 @@ class RoluetteEventBet extends GameEvent
         return $bets;
     }
 
-    public function __construct(int $gameId, int $userId, int $amount, RoluetteBet $bet, int $id=-1)
+    public function __construct(int $gameId, int $userId, int $amount, RoluetteBet $bet, int $id = -1)
     {
         $content = [
             "userId" => $userId,
@@ -175,7 +176,7 @@ class RoluetteEventSpinResult extends GameEvent
         return new RoluetteEventSpinResult($gameId, $content["index"], $content["time"], $result["id"]);
     }
 
-    public function __construct(int $gameId, int $index, int $time = -1, int $id=-1)
+    public function __construct(int $gameId, int $index, int $time = -1, int $id = -1)
     {
         if ($time == -1)
             $time = time();

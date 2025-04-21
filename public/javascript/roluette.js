@@ -49,16 +49,51 @@ const INDEX_TO_COLOR = {
     36: ROLUETTE_COLORS.RED,
 }
 
+function Wallet() {
+    const CHIP_ID = "chips"
+    const chipsElement = document.getElementById(CHIP_ID)
+    let amount = Number(chipsElement.innerText)
+
+    function Deposit(depositAmount) {
+        amount += depositAmount
+        UpdateChips()
+    }
+
+    function TryWithdraw(withdrawAmount) {
+        if (withdrawAmount > amount)
+            return false
+        amount -= withdrawAmount
+        UpdateChips()
+        return true
+    }
+
+    function UpdateChips() {
+        chipsElement.innerText = amount
+    }
+
+    return {
+        Deposit,
+        TryWithdraw
+    }
+}
+
 function RoluetteWheel() {
     const numbers = []
-    const FPS = 1000
+    const FPS = 60
     let offset = 0
     let prevTime = Date.now()
     let blockWidth = 0
     let blockMargin = 20
+    let defaultSpeed = 4
+    let roolWithIt = false
+
+    let avgDt = 0
+    let frames = 0
 
     let target = 0
     let speed = 0
+
+    let onTarget
 
     Array.from(document.getElementById("roluette-bar").children).forEach((number, i) => {
         number.style.backgroundColor = INDEX_TO_COLOR[i]
@@ -71,14 +106,47 @@ function RoluetteWheel() {
         })
     })
 
-    function Animate(dt) {
+    function OffsetToIndex(o) {
         const totalWidth = 37 * (blockWidth + blockMargin)
+        return (Math.ceil(o * 37 / totalWidth - 0.5)) % 37
+    }
 
+    function Animate(dt) {
+        avgDt = (frames * avgDt + dt) / (frames + 1)
+        frames += 0
+        const totalWidth = 37 * (blockWidth + blockMargin)
         if (target !== -1) {
-            const current = offset * 37 / totalWidth
-            speed = Math.abs(current - target) * 7 / 37
+            const current = OffsetToIndex(offset)
+            let predictedOffset = offset
+            let vSpeed = speed
+            while (vSpeed > 0.01) {
+                vSpeed -= vSpeed * avgDt / 1000 + 0.05
+                if (vSpeed < 0.1)
+                    vSpeed = 0
+                vSpeed = Math.max(vSpeed, 0)
+                predictedOffset += vSpeed * avgDt
+                predictedOffset = predictedOffset % totalWidth
+            }
+
+            const predictedTarget = OffsetToIndex(predictedOffset)
+            if (true && Math.abs(predictedTarget - target) >= 1) {
+                speed -= speed * dt / 3000 + 0.01
+            } else {
+                roolWithIt = true
+                if (speed < 0.1)
+                    speed = 0
+                speed -= speed * dt / 1000 + 0.05
+            }
+
+            speed = Math.max(speed, 0)
+
+
+            if (speed === 0 && onTarget !== undefined) {
+                onTarget()
+                onTarget = undefined
+            }
         } else {
-            speed = 7
+            speed = defaultSpeed
         }
 
 
@@ -108,18 +176,26 @@ function RoluetteWheel() {
 
 
     return {
-        set target(value) { target = value }
+        set target(value) {
+            roolWithIt = false
+            target = value
+        },
+
+        set onTarget(value) {
+            onTarget = value;
+        }
     }
 }
 
 function RoluetteHandler(pollInterval) {
-
     const SELECT_GREEN_ID = "roluette-color-green";
     const SELECT_RED_ID = "roluette-color-red";
     const SELECT_BLACK_ID = "roluette-color-black";
 
     const BET_AMOUNT_ID = "bet-amount"
     const BET_BUTTON_ID = "bet"
+
+    const wallet = Wallet()
 
     let currentEventIndex = -1;
 
@@ -147,16 +223,27 @@ function RoluetteHandler(pollInterval) {
             return;
         }
 
-        if (json.newEventId)
-        {
+        if (json.newEventId) {
             currentEventIndex = json.newEventId
         }
-
         const events = json.events
         if (events.length > 0) {
             currentEventIndex = events[events.length - 1].Id
 
             const lastEvent = events[events.length - 1]
+
+            if (json.payout) {
+                const payout = Number(json.payout)
+    
+                if (payout > 0) {
+                    console.log(1)
+                    wheel.onTarget = () => {
+                        console.log(2)
+                        wallet.Deposit(payout)
+                    }
+                }
+            }
+    
 
             if (lastEvent.eventType = "roluette_spin_result") {
                 wheel.target = -1
@@ -164,13 +251,17 @@ function RoluetteHandler(pollInterval) {
                     wheel.target = lastEvent.Content.index
                 }, 2000)
                 setTimeout(() => {
-                    
+
                 }, 5000)
             }
         }
     }
 
     async function Bet(amount, color) {
+        if (!wallet.TryWithdraw(amount)) {
+            return;
+        }
+
         const res = await fetch("/roluette-bet.php", {
             method: "POST",
             headers: {
@@ -219,5 +310,5 @@ function RoluetteHandler(pollInterval) {
 let roluette;
 
 window.addEventListener("load", async () => {
-    roluette = RoluetteHandler(1000);
+    roluette = RoluetteHandler(1000)
 })

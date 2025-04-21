@@ -7,7 +7,7 @@ $wallet = $user->GetWallet();
 <header id="game-header">
     <h1><a href="/">Generic Gambing Site</a></h1>
     <div>
-        <span><?php echo $wallet->Amount ?></span>
+        <span id="chips"><?php echo $wallet->Amount ?></span>
         <img src="/public/images/chip.svg" />
     </div>
 
