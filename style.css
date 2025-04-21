@@ -245,14 +245,46 @@ header nav {
     margin-bottom: 2rem;
 }
 
-#controls
-{
+#controls {
     align-items: center;
     justify-content: center;
 }
 
 #chat {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
+}
+
+#chat-messages {
+    flex: 1;
+}
+
+#chat-messages div {
+    margin: 0.25rem;
+    width: 90%;
+}
+
+#chat-messages div[you]{
+    text-align: right;
+    margin-left: auto;
+}
+#chat-messages div[you] .name{
+    text-align: right;
+}
+
+#chat-controls input {
+    width: 100%;
+}
+
+.name {
+    font-size: small;
+}
+
+.message {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 0.25rem;
 }
 
 /* #endregion Specific */

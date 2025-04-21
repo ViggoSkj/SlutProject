@@ -18,6 +18,8 @@ $users = $lobby->Users();
 <head>
     <?php include "head.php" ?>
     <link rel="stylesheet" href="/public/styles/roluette.css">
+    <script src="/public/javascript/events.js"></script>
+    <script src="/public/javascript/chat.js"></script>
     <script src="/public/javascript/roluette.js"></script>
     <title>Document</title>
 </head>
@@ -26,7 +28,13 @@ $users = $lobby->Users();
     <?php include "game-header.php" ?>
     <div id="social">
         <section id="chat">
+            <div id="chat-messages">
 
+            </div>
+            <div id="chat-controls">
+                <input id="message-input" type="text">
+                <button id="send-message">Send</button>
+            </div>
         </section>
         <div id="lobby-occupants">
             <?php foreach ($users as $user) { ?>

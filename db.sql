@@ -57,7 +57,7 @@ CREATE TABLE Chat (
 CREATE TABLE ChatMessage (
     id integer unsigned PRIMARY KEY AUTO_INCREMENT,
     chatId integer unsigned NOT NULL,
-    text VARCHAR(1000) NOT NULL,
+    message VARCHAR(255) NOT NULL,
     userId integer unsigned NOT NULL,
     FOREIGN KEY (chatId) REFERENCES Chat(id) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES AppUser(id) ON DELETE CASCADE

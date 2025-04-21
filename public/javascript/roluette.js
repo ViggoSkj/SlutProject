@@ -196,49 +196,26 @@ function RoluetteHandler(pollInterval) {
     const BET_BUTTON_ID = "bet"
 
     const wallet = Wallet()
+    let events = Events(pollInterval, "poll-event-roluette.php")
+    let chat = Chat(events)
 
-    let currentEventIndex = -1;
 
     let state = ROLUETTE_STATES.BETTING;
 
     const wheel = RoluetteWheel()
 
-    async function Poll() {
-        const res = await fetch("/poll-event-roluette.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                currentEventIndex: currentEventIndex
-            })
-        });
+    events.Listen(Poll)
 
-        const json = await res.json();
-        if (res.status == 400) {
-            console.log(json.message);
-            return;
-        } else if (res.status >= 500) {
-            console.log("polling resulted in 500");
-            return;
-        }
-
-        if (json.newEventId) {
-            currentEventIndex = json.newEventId
-        }
+    async function Poll(json) {
         const events = json.events
         if (events.length > 0) {
-            currentEventIndex = events[events.length - 1].Id
-
             const lastEvent = events[events.length - 1]
 
             if (json.payout) {
                 const payout = Number(json.payout)
     
                 if (payout > 0) {
-                    console.log(1)
                     wheel.onTarget = () => {
-                        console.log(2)
                         wallet.Deposit(payout)
                     }
                 }
@@ -297,10 +274,6 @@ function RoluetteHandler(pollInterval) {
 
         Bet(amount, color)
     })
-
-    const pollIntervalIndex = setInterval(() => {
-        Poll()
-    }, pollInterval);
 
     return {
         get currentEventIndex() { return currentEventIndex; }

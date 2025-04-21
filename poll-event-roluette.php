@@ -12,7 +12,12 @@ if (!isset($data["currentEventIndex"])) {
     BadReqeust("no current event index set.");
 }
 
+if (!isset($data["currentChatIndex"])) {
+    BadReqeust("no current chat index set.");
+}
+
 $currentEventIndex = $data["currentEventIndex"];
+$currentChatIndex = $data["currentChatIndex"];
 
 
 $user = User::SessionUser();
@@ -37,11 +42,43 @@ $response = [
 
 $lastSpin = RoluetteEventSpinResult::LastSpin($roluette->Id);
 
-if ($currentEventIndex == -1)
-{
+if ($currentEventIndex == -1) {
     $currentEventIndex = $lastSpin->Id;
     $response["newEventId"] = $lastSpin->Id;
 }
+
+
+// region chat
+
+if ($currentChatIndex == -1) {
+    $currentChatIndex = 0;
+}
+
+$chat = $lobby->GetChat();
+$messages = $chat->GetMessagesAfter($currentChatIndex);
+
+if (count($messages) > 0) {
+    $response["newMessageId"] = $messages[count($messages) - 1]->Id;
+}
+
+for($i = 0; $i < count($messages); $i++)
+{
+    $message = $messages[$i];
+
+    $messageUser = User::GetUser($message->UserId);
+
+    $messages[$i] = [
+        "message" => $message->Message,
+        "user" => $messageUser->Username,
+        "you" => $message->UserId == $user->GetId()
+    ];
+}
+
+$response["newMessages"] = $messages;
+
+
+// endregion chat
+
 
 
 $spin = false;
@@ -88,6 +125,10 @@ if ($spin) {
 
 
 $events = $roluette->EventsAfter($currentEventIndex);
+
+if (count($events) > 0) {
+    $response["newEventId"] = $events[count($events) - 1]->Id;
+}
 
 foreach ($events as $event) {
     $eventType = $event->EventType;

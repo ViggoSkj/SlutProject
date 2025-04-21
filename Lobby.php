@@ -3,6 +3,7 @@
 require_once "db.php";
 require_once "Game.php";
 require_once "User.php";
+require_once "Chat.php";
 
 class Lobby extends DatabaseObject
 {
@@ -73,6 +74,17 @@ class Lobby extends DatabaseObject
         } else {
             // will not happen so wont implement
         }
+    }
+
+    public function GetChat(): Chat
+    {
+        $chat = Chat::GetLobbyChat($this->Id);
+
+        if ($chat == null) {
+            $chat = new Chat($this->Id);
+            $chat->Save();
+        }
+        return $chat;
     }
 
     public function Users(): array
