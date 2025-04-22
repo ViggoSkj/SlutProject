@@ -48,7 +48,7 @@ if (isset($_GET["token"])) {
             
             <?php if ($successMessage != "") { ?>
                 <p class="color-success"><?php echo $successMessage ?></p>
-                <a href="/" class="button button-pos">Home</a>
+                <a href="" class="button button-pos">Home</a>
             <?php } ?>
         </section>
     </main>

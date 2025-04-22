@@ -17,8 +17,8 @@ $users = $lobby->Users();
 
 <head>
     <?php include "head.php" ?>
-    <link rel="stylesheet" href="/public/styles/roluette.css">
-    <script src="/public/javascript/roluette.js"></script>
+    <link rel="stylesheet" href="public/styles/roluette.css">
+    <script src="public/javascript/roluette.js"></script>
     <title>Document</title>
 </head>
 
@@ -29,7 +29,7 @@ $users = $lobby->Users();
 
     <div id="lobby-occupants">
         <?php foreach ($users as $user) { ?>
-            <img src="/public/images/user.svg" />
+            <img src="public/images/user.svg" />
         <?php } ?>
     </div>
 </body>

@@ -43,7 +43,6 @@ CREATE TABLE LobbyOccupant (
     id integer unsigned PRIMARY KEY AUTO_INCREMENT,
     lobbyId integer unsigned NOT NULL,
     userId integer unsigned NOT NULL,
-    PRIMARY KEY (id),
     FOREIGN KEY (lobbyId) REFERENCES Lobby(id) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES AppUser(id) ON DELETE CASCADE
 );

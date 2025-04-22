@@ -15,6 +15,32 @@ class User extends DatabaseObject
     private int $m_id;
     private string $m_passwordHash;
 
+    static public function GetTopUsers($number): array {    
+        $db = Database::GetInstance();
+
+        $stmt = $db->PDO->prepare("
+            SELECT Wallet.amount AppUser.username from AppUser
+            INNER JOIN Wallet On Wallet.userId = AppUser.id
+            ORDER BY Wallet.amount DESC LIMIT :number
+        ");
+
+        $stmt->execute([
+            "number" => $number
+        ]);
+
+        $results = [];
+
+        foreach($stmt->fetchAll(PDO::FETCH_ASSOC) as $result)
+        {
+            array_push($results, [
+                "username" => $result["username"],
+                "amount" => $result["amount"],
+            ]);
+        }
+
+        return $results;
+    }
+
     static public function SessionUser(): User | null
     {
         if (self::$s_sessionUser == null && isset($_SESSION["user_id"]))
@@ -99,7 +125,7 @@ class User extends DatabaseObject
             "userId" => $this->m_id
         ]);
 
-        if($stmt->rowCount() == 0)
+        if ($stmt->rowCount() == 0)
             return null;
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -111,8 +137,7 @@ class User extends DatabaseObject
     {
         $wallet = Wallet::GetUsersWallet($this->m_id);
 
-        if ($wallet == null)
-        {
+        if ($wallet == null) {
             $wallet = new Wallet($this->m_id, 1000, 0);
             $wallet->Save();
         }
@@ -165,11 +190,11 @@ class User extends DatabaseObject
         $stmt->execute(["id" => $this->m_id]);
     }
 
-    public function LeaveLobby() : bool {
+    public function LeaveLobby(): bool
+    {
         $activeLobby = $this->GetActiveLobby();
 
-        if ($activeLobby == null)
-        {
+        if ($activeLobby == null) {
             return false;
         }
 

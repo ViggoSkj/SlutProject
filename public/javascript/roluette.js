@@ -2,7 +2,7 @@ function RoluetteHandler(pollInterval) {
     let currentEventIndex = 0;
 
     async function Poll() {
-        const res = await fetch("/poll-event-roluette.php", {
+        const res = await fetch("poll-event-roluette.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

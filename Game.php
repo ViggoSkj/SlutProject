@@ -23,7 +23,7 @@ class Game extends DatabaseObject
         return new Game($result["gameType"], $result["id"]);
     }
 
-    public function __construct($gameType, $id=-1)
+    public function __construct($gameType, $id = -1)
     {
         parent::__construct();
 
@@ -58,6 +58,17 @@ class Game extends DatabaseObject
         }
 
         return $events;
+    }
+
+    public function Clean()
+    {
+        $this->m_database->PDO->prepare("DELETE From Game WHERE id = :id")->execute([
+            "id" => $this->Id,
+        ]);
+        
+        $this->m_database->PDO->prepare("DELETE From GameEvent WHERE gameId = :gameId")->execute([
+            "gameId" => $this->Id,
+        ]);
     }
 }
 

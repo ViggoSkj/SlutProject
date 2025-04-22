@@ -15,7 +15,7 @@ session_start();
     <main class="center-page">
         <section class="flex-centering">
             <h1>Verification nedded</h1>
-            <a href="/logout.php" class="button button-neg">Log out</a>
+            <a href="logout.php" class="button button-neg">Log out</a>
         </section>
     </main>
 </body>
