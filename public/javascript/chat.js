@@ -2,6 +2,9 @@ function Chat(events) {
     const MESSAGE_SEND_ID = "send-message"
     const MESSAGE_INPUT_ID = "message-input"
     const MESSAGES_CONTAINER_ID = "chat-messages"
+    const LOBBY_OCCUPANTS_ID = "lobby-occupants"
+
+    let lobbyOccupantCount = -1
 
     document.getElementById(MESSAGE_SEND_ID).addEventListener("click", () => {
         const message = document.getElementById(MESSAGE_INPUT_ID).value
@@ -10,8 +13,21 @@ function Chat(events) {
 
     events.Listen(Poll)
 
+    function UpdateLobbyOccupants(newCount) {
+        if (newCount != lobbyOccupantCount)
+            lobbyOccupantCount = newCount
+
+        document.getElementById(LOBBY_OCCUPANTS_ID).innerHTML = '<img src="/public/images/user.svg" />'.repeat(lobbyOccupantCount)
+    }
+
     async function Poll(json) {
         const newMessages = json.newMessages
+        const userCount = json.userCount
+
+        if (userCount)
+        {
+            UpdateLobbyOccupants(Number(userCount))
+        }
 
         newMessages.forEach(message => {
             AppendMessage(message.message, message.user, message.you)

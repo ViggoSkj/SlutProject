@@ -3,7 +3,7 @@ session_start();
 
 $error = isset($_GET["error"]) ? $_GET["error"] : ""
 
-    ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">

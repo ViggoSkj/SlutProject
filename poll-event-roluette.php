@@ -19,6 +19,13 @@ if (!isset($data["currentChatIndex"])) {
 $currentEventIndex = $data["currentEventIndex"];
 $currentChatIndex = $data["currentChatIndex"];
 
+if (filter_var($currentEventIndex, FILTER_VALIDATE_INT)) {
+    BadReqeust("invalid current event index");
+}
+
+if (filter_var($currentChatIndex, FILTER_VALIDATE_INT)) {
+    BadReqeust("invalid current chat index");
+}
 
 $user = User::SessionUser();
 $lobby = $user->GetActiveLobby();
@@ -61,8 +68,7 @@ if (count($messages) > 0) {
     $response["newMessageId"] = $messages[count($messages) - 1]->Id;
 }
 
-for($i = 0; $i < count($messages); $i++)
-{
+for ($i = 0; $i < count($messages); $i++) {
     $message = $messages[$i];
 
     $messageUser = User::GetUser($message->UserId);
@@ -92,9 +98,10 @@ if ($lastSpin != null) {
 }
 
 $response["timeSinceLastSpin"] = -1;
+$occupants = $lobby->Users();
+$response["userCount"] = count($occupants);
 
 if ($spin == false) {
-    $occupants = $lobby->Users();
     $bets = $roluette->ActiveBets();
 
     $allBetting = true;
@@ -135,12 +142,12 @@ foreach ($events as $event) {
 
     switch ($eventType) {
         case (RoluetteEventSpinResult::EVENT_NAME): {
-            $payout = $roluette->CalculatePayout($user->GetId());
-            $response["payout"] = $payout;
-            $user->GetWallet()->Deposit($payout);
-            array_push($response["events"], $event);
-            break;
-        }
+                $payout = $roluette->CalculatePayout($user->GetId());
+                $response["payout"] = $payout;
+                $user->GetWallet()->Deposit($payout);
+                array_push($response["events"], $event);
+                break;
+            }
     }
 }
 

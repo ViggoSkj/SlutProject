@@ -13,8 +13,6 @@ if(isset($_GET["game"]))
     $type = $_GET["game"];
     switch($type){
         case (GameType::ROLUETTE):
-        case (GameType::POKER):
-        case (GameType::BLACKJACK):
             break;
         default:
             die("invalid game type");

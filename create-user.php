@@ -9,10 +9,18 @@ if (isset($_POST) && isset($_POST["email"]) && isset($_POST["username"]) && isse
     $username = $_POST["username"];
     $password = $_POST["password"];
 
+
+    // verify email
+    if (filter_var($email, FILTER_VALIDATE_EMAIL))
+    {
+        header("Location: signup.php?error=invalid email");
+        die();
+    }
+
     $user = new User($email, $username, $password);
 
     if (User::IsDuplicateEntry($user)) {
-        header("Location: /signup.php?error=user already exists");
+        header("Location: signup.php?error=user already exists");
         die();
     }
 
@@ -30,6 +38,6 @@ if (isset($_POST) && isset($_POST["email"]) && isset($_POST["username"]) && isse
     }
 
     
-    header("Location: /verification-needed.php");
+    header("Location: verification-needed.php");
     die();
 }
