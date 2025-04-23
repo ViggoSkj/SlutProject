@@ -15,7 +15,6 @@ class Database
         global $database_userpassword;
         $this->PDO = new PDO("mysql:host=$database_host;dbname=$database_name;charset=utf8", $database_username, $database_userpassword);
         $this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo 1;
     }
 
     public static function GetInstance(): Database
