@@ -112,11 +112,9 @@ class GameEvent extends DatabaseObject
 abstract class GameType
 {
     public const ROLUETTE = "roluette";
-    public const POKER = "poker";
-    public const BLACKJACK = "blackjack";
+    public const RPS = "rps";
     public const urls = [
         GameType::ROLUETTE => "roluette.php",
-        GameType::POKER => "poker.php",
-        GameType::BLACKJACK => "blackjack.php",
+        GameType::RPS => "rps.php"
     ];
 }
