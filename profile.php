@@ -17,10 +17,10 @@ include_once "login-guard.php";
     <?php include "header.php" ?>
 
     <main class="center-page">
-        <form action="/create-reset-password.php" method="POST">
+        <form action="create-reset-password.php" method="POST">
             <button>Reset password</button>
         </form>
-        <form action="/give.php" method="GET">
+        <form action="give.php" method="GET">
             <div>
                 <p>Amount</p>
                 <input type="text" name="amount">

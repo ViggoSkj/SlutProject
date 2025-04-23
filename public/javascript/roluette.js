@@ -213,14 +213,14 @@ function RoluetteHandler(pollInterval) {
 
             if (json.payout) {
                 const payout = Number(json.payout)
-    
+
                 if (payout > 0) {
                     wheel.onTarget = () => {
                         wallet.Deposit(payout)
                     }
                 }
             }
-    
+
 
             if (lastEvent.eventType = "roluette_spin_result") {
                 wheel.target = -1

@@ -126,6 +126,25 @@ class Lobby extends DatabaseObject
             "userId" => $userId,
             "lobbyId" => $this->Id
         ]);
+
+        $users = $this->Users();
+
+        if (count($users) == 0)
+            $this->Clean();
+    }
+
+    public function Clean()
+    {
+        $this->m_database->PDO->prepare("DELETE From Lobby WHERE id = :id")->execute([
+            "id" => $this->Id,
+        ]);
+        
+        $this->m_database->PDO->prepare("DELETE From LobbyOccupant WHERE lobbyId = :lobbyId")->execute([
+            "lobbyId" => $this->Id,
+        ]);
+
+        $game = $this->GetGame();
+        $game->Clean();
     }
 }
 

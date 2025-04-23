@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include "/login-guard.php";
+include "login-guard.php";
 
 ?>
 

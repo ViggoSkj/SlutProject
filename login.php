@@ -17,7 +17,7 @@ $error = isset($_GET["error"]) ? $_GET["error"] : ""
     <?php include "header.php" ?>
 
     <main class="center-page">
-        <form method="POST" action="/auth.php">
+        <form method="POST" action="auth.php">
             <div>
                 <p>Email</p>
                 <input name="email"></input>
@@ -29,7 +29,7 @@ $error = isset($_GET["error"]) ? $_GET["error"] : ""
             <p style="color: red;"><?php echo $error ?></p>
             <div class="button-row">
                 <button class="button-pos">Log in</button>
-                <a class="button" href="/signup.php">Sign up</a>
+                <a class="button" href="signup.php">Sign up</a>
             </div>
         </form>
     </main>
