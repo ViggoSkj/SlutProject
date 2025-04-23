@@ -3,9 +3,7 @@ session_start();
 
 include_once "login-guard.php";
 include_once "Game.php"
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +16,6 @@ include_once "Game.php"
     <main class="center-page">
         <section class="button-row">
             <a class="button button-pos game-option" href="join-lobby.php?game=<?php echo GameType::ROLUETTE?>"><span>Roluette</span></a>
-            <a class="button button-pos game-option" href="join-lobby.php?game=<?php echo GameType::RPS?>"><span>Rock, Paper, Scissors</span></a>
         </section>
     </main>
 </body>
