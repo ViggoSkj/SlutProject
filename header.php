@@ -10,6 +10,7 @@ $loggedIn = $user != null;
     <?php if ($loggedIn) /* Logged in */ { ?>
         <nav>
             <a href="index.php" class="button">Home</a>
+            <a href="leaderboard.php" class="button">Leaderboard</a>
         </nav>
         <div class="button-row">
             <div>

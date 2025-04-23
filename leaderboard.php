@@ -4,7 +4,7 @@ session_start();
 include_once "login-guard.php";
 include_once "Game.php";
 
-$topUsers = User::GetTopUsers(10);
+$topUsers = User::GetTopUsers();
 
 ?>
 
@@ -20,7 +20,7 @@ $topUsers = User::GetTopUsers(10);
 <body>
     <?php include "header.php" ?>
     <main class="center-page">
-        <section class="button-row">
+        <section>
             <?php foreach ($topUsers as $user) { ?>
                 <p><?php echo $user["username"] ?> - <?php echo $user["amount"] ?> </p>
             <?php } ?>

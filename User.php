@@ -15,18 +15,18 @@ class User extends DatabaseObject
     private int $m_id;
     private string $m_passwordHash;
 
-    static public function GetTopUsers($number): array {    
+    static public function GetTopUsers(): array {    
         $db = Database::GetInstance();
 
         $stmt = $db->PDO->prepare("
-            SELECT Wallet.amount AppUser.username from AppUser
-            INNER JOIN Wallet On Wallet.userId = AppUser.id
-            ORDER BY Wallet.amount DESC LIMIT :number
+            SELECT 
+                Wallet.amount as amount,
+                AppUser.username as username
+            FROM AppUser
+            INNER JOIN Wallet On AppUser.id = Wallet.userId
+            ORDER BY amount DESC LIMIT 10
         ");
-
-        $stmt->execute([
-            "number" => $number
-        ]);
+        $stmt->execute();
 
         $results = [];
 
