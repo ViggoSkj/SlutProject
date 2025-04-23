@@ -15,7 +15,7 @@ $loggedIn = $user != null;
             </nav>
             <div class="button-row">
                 <div>
-                    <span><?php echo $user->GetWallet()->Amount ?></span>
+                    <span id="chips"><?php echo $user->GetWallet()->Amount ?></span>
                     <img src="public/images/chip.svg" />
                 </div>
                 <a href="logout.php" class="button button-neg">Log out</a>

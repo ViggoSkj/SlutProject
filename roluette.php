@@ -18,9 +18,9 @@ $users = $lobby->Users();
 <head>
     <?php include "head.php" ?>
     <link rel="stylesheet" href="/public/styles/roluette.css">
-    <script src="/public/javascript/events.js"></script>
-    <script src="/public/javascript/chat.js"></script>
-    <script src="/public/javascript/roluette.js"></script>
+    <script src="public/javascript/events.js"></script>
+    <script src="public/javascript/chat.js"></script>
+    <script src="public/javascript/roluette.js"></script>
     <title>Document</title>
 </head>
 
