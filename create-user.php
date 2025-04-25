@@ -33,10 +33,11 @@ if (isset($_POST) && isset($_POST["email"]) && isset($_POST["username"]) && isse
 
         $userVerificationToken = UserVerificationToken::CreateToken($user->GetId());
 
-        echo email($user->Email, "verification", "https://172.234.100.145/verify.php?token=".$userVerificationToken->UUID);
+        email($user->Email, "verification", "https://172.234.100.145/verify.php?token=".$userVerificationToken->UUID);
     } else {
         die("somthing whent wrong.");
     }
+
     header("Location: verification-needed.php");
     die();
 }
