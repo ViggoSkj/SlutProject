@@ -19,11 +19,11 @@ if (!isset($data["currentChatIndex"])) {
 $currentEventIndex = $data["currentEventIndex"];
 $currentChatIndex = $data["currentChatIndex"];
 
-if (filter_var($currentEventIndex, FILTER_VALIDATE_INT)) {
+if (!filter_var($currentEventIndex, FILTER_VALIDATE_INT)) {
     BadReqeust("invalid current event index");
 }
 
-if (filter_var($currentChatIndex, FILTER_VALIDATE_INT)) {
+if (!filter_var($currentChatIndex, FILTER_VALIDATE_INT)) {
     BadReqeust("invalid current chat index");
 }
 
@@ -50,8 +50,13 @@ $response = [
 $lastSpin = RoluetteEventSpinResult::LastSpin($roluette->Id);
 
 if ($currentEventIndex == -1) {
-    $currentEventIndex = $lastSpin->Id;
-    $response["newEventId"] = $lastSpin->Id;
+    if ($lastSpin) {
+        $currentEventIndex = $lastSpin->Id;
+        $response["newEventId"] = $lastSpin->Id;
+    } else{
+        $currentEventIndex = 0;
+        $response["newEventId"] = 0;
+    }
 }
 
 
@@ -111,6 +116,7 @@ if ($spin == false) {
         $found = false;
 
         foreach ($bets as $bet) {
+
             if ($occupant->GetId() == $bet->Content["userId"]) {
                 $found = true;
                 break;

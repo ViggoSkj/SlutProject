@@ -19,11 +19,11 @@ if (!isset($data["amount"])) {
 $color = $data["color"];
 $amount = $data["amount"];
 
-if ($color != "green" || $color != "red" || $color != "black") {
+if ($color != "green" && $color != "red" && $color != "black") {
     BadReqeust("invalid color");
 }
 
-if (filter_var($amount, FILTER_VALIDATE_INT)) {
+if (!filter_var($amount, FILTER_VALIDATE_INT)) {
     BadReqeust("invalid amount");
 }
 

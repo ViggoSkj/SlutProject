@@ -4,6 +4,8 @@ include_once "db.php";
 
 class Wallet extends DatabaseObject
 {
+    public const DAILY_REWARD_AMOUNT = 1000;
+
     public int $Id;
     public int $UserId;
     public int $Amount;
@@ -34,6 +36,11 @@ class Wallet extends DatabaseObject
         $this->LastDailyRewardClaimed = $lastDailyRewardClaimed;
     }
 
+    public function NextDailyReward(): int
+    {
+        return $this->LastDailyRewardClaimed + 3600  * 24;
+    }
+
     public function TryWithdraw(int $amount): bool
     {
         if ($this->Amount < $amount) {
@@ -51,6 +58,20 @@ class Wallet extends DatabaseObject
     {
         $this->Amount += $amount;
         $this->Save();
+    }
+
+    public function TryClaimDailyReward(): bool
+    {
+        if (time() < $this->LastDailyRewardClaimed + 3600 * 24);
+        return false;
+
+        $this->LastDailyRewardClaimed = time();
+
+        $this->Amount += Wallet::DAILY_REWARD_AMOUNT;
+
+        $this->Save();
+
+        return true;
     }
 
     public function Save()

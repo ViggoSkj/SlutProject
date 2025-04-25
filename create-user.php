@@ -3,6 +3,7 @@ session_start();
 
 include_once "User.php";
 include_once "UserVerificationToken.php";
+include_once "util.php";
 
 if (isset($_POST) && isset($_POST["email"]) && isset($_POST["username"]) && isset($_POST["password"])) {
     $email = $_POST["email"];
@@ -11,7 +12,7 @@ if (isset($_POST) && isset($_POST["email"]) && isset($_POST["username"]) && isse
 
 
     // verify email
-    if (filter_var($email, FILTER_VALIDATE_EMAIL))
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL))
     {
         header("Location: signup.php?error=invalid email");
         die();
@@ -32,12 +33,10 @@ if (isset($_POST) && isset($_POST["email"]) && isset($_POST["username"]) && isse
 
         $userVerificationToken = UserVerificationToken::CreateToken($user->GetId());
 
-        //mail($user->Email, "verification", "https://labb.vgy.se/....test?token=".$userVerificationToken->UUID);
+        echo email($user->Email, "verification", "https://172.234.100.145/verify.php?token=".$userVerificationToken->UUID);
     } else {
         die("somthing whent wrong.");
     }
-
-    
     header("Location: verification-needed.php");
     die();
 }

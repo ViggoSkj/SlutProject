@@ -90,7 +90,13 @@ class Lobby extends DatabaseObject
     public function Users(): array
     {
         $stmt = $this->m_database->PDO->prepare("
-        SELECT * FROM AppUser 
+        SELECT
+            AppUser.email as email,
+            AppUser.username as username,
+            AppUser.passwordHash as passwordHash,
+            AppUser.verified as verified,
+            AppUser.id as id
+        FROM AppUser 
         INNER JOIN LobbyOccupant ON LobbyOccupant.userId = AppUser.id
         WHERE LobbyOccupant.lobbyId = :lobbyId
         ");

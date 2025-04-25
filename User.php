@@ -210,11 +210,12 @@ class User extends DatabaseObject
                (email, username, passwordHash, verified)
         VALUES (:email, :username, :passwordHash, :verified)
         ");
+        
         $stmt->execute([
             'email' => $this->Email,
             'username' => $this->Username,
             'passwordHash' => $this->m_passwordHash,
-            'verified' => $this->m_verified,
+            'verified' => $this->m_verified ? 1 : 0,
         ]);
     }
 

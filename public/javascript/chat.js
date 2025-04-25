@@ -14,18 +14,17 @@ function Chat(events) {
     events.Listen(Poll)
 
     function UpdateLobbyOccupants(newCount) {
-        if (newCount != lobbyOccupantCount)
+        if (newCount != lobbyOccupantCount) {
             lobbyOccupantCount = newCount
-
-        document.getElementById(LOBBY_OCCUPANTS_ID).innerHTML = '<img src="/public/images/user.svg" />'.repeat(lobbyOccupantCount)
+            document.getElementById(LOBBY_OCCUPANTS_ID).innerHTML = '<img src="/public/images/user.svg" />'.repeat(lobbyOccupantCount)
+        }
     }
 
     async function Poll(json) {
         const newMessages = json.newMessages
         const userCount = json.userCount
 
-        if (userCount)
-        {
+        if (userCount) {
             UpdateLobbyOccupants(Number(userCount))
         }
 

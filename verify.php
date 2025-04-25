@@ -2,12 +2,13 @@
 require_once "UserVerificationToken.php";
 require_once "User.php";
 
+$errorMessage = "";
+$successMessage = "";
+
 if (isset($_GET["token"])) {
     $tokenId = $_GET["token"];
     $token = UserVerificationToken::GetToken($tokenId);
 
-    $errorMessage = "";
-    $successMessage = "";
 
     if (!$token) {
         $errorMessage = "Invalid verification link.";
@@ -25,7 +26,8 @@ if (isset($_GET["token"])) {
 
         $successMessage = "Account verified.";
     }
-
+} else {
+    $errorMessage = "Invalid verification link.";
 }
 
 ?>
@@ -45,10 +47,10 @@ if (isset($_GET["token"])) {
             <?php if ($errorMessage != "") { ?>
                 <p class="color-neg"><?php echo $errorMessage ?></p>
             <?php } ?>
-            
+
             <?php if ($successMessage != "") { ?>
                 <p class="color-success"><?php echo $successMessage ?></p>
-                <a href="" class="button button-pos">Home</a>
+                <a href="/index.php" class="button button-pos">Home</a>
             <?php } ?>
         </section>
     </main>

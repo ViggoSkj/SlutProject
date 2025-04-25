@@ -13,7 +13,7 @@ class Database
         global $database_name;
         global $database_username;
         global $database_userpassword;
-        $this->PDO = new PDO("mysql:host=$database_host;dbname=$database_name;charset=utf8", $database_username, $database_userpassword);
+        $this->PDO = new PDO("mysql:host=$database_host;port=3306;dbname=$database_name;charset=utf8", $database_username, $database_userpassword);
         $this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
