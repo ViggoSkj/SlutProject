@@ -11,12 +11,11 @@ $loggedIn = $user != null;
         <?php
 
         $next = $user->GetWallet()->NextDailyReward() - time();
-
         ?>
         <nav>
             <a href="index.php" class="button">Home</a>
             <a href="leaderboard.php" class="button">Leaderboard</a>
-            <button href="leaderboard.php" class="button" id="daily-reward-button" data-next="<?php if ($next < 0) echo $next ?>">Daily Reward</button>
+            <button href="leaderboard.php" class="button" id="daily-reward-button" data-next="<?php echo $next ?>">Daily Reward</button>
         </nav>
         <div class="button-row">
             <div>

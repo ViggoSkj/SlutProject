@@ -62,8 +62,8 @@ class Wallet extends DatabaseObject
 
     public function TryClaimDailyReward(): bool
     {
-        if (time() < $this->LastDailyRewardClaimed + 3600 * 24);
-        return false;
+        if (time() < $this->LastDailyRewardClaimed + 3600 * 24)
+            return false;
 
         $this->LastDailyRewardClaimed = time();
 
