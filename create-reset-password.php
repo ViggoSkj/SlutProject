@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $token = PasswordResetToken::CreateToken($user->GetId());
 
-    email($user->Email, "password reset", "https://172.234.100.145/reset-password.php/?token=".$token->UUID);
+    email($user->Email, "password reset", "http://172.234.100.145/reset-password.php/?token=".$token->UUID);
 
     header("Location: /create-reset-password.php");
     exit();
