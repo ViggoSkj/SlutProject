@@ -4,7 +4,13 @@ function Events(pollingInterval, endpoint) {
     let currentEventIndex = -1;
     let currentChatIndex = -1;
 
+    let pollLock = false
+
     async function Poll() {
+        if (pollLock)
+            return
+        
+        pollLock = true
         const res = await fetch(endpoint, {
             method: "POST",
             headers: {
@@ -15,6 +21,7 @@ function Events(pollingInterval, endpoint) {
                 currentChatIndex: currentChatIndex
             })
         });
+        pollLock = false
 
         const json = await res.json();
         if (res.status == 400) {
