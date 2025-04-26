@@ -87,9 +87,6 @@ function RoluetteWheel() {
     let defaultSpeed = 4
     let roolWithIt = false
 
-    let avgDt = 0
-    let frames = 0
-
     let target = 0
     let speed = 0
 
@@ -112,38 +109,20 @@ function RoluetteWheel() {
     }
 
     function Animate(dt) {
-        avgDt = (frames * avgDt + dt) / (frames + 1)
-        frames += 0
+
         const totalWidth = 37 * (blockWidth + blockMargin)
         if (target !== -1) {
             const current = OffsetToIndex(offset)
-            let predictedOffset = offset
-            let vSpeed = speed
-            while (vSpeed > 0.01) {
-                vSpeed -= vSpeed * avgDt / 1000 + 0.05
-                if (vSpeed < 0.1)
-                    vSpeed = 0
-                vSpeed = Math.max(vSpeed, 0)
-                predictedOffset += vSpeed * avgDt
-                predictedOffset = predictedOffset % totalWidth
-            }
 
-            const predictedTarget = OffsetToIndex(predictedOffset)
-            if (true && Math.abs(predictedTarget - target) >= 1) {
-                speed -= speed * dt / 3000 + 0.01
+            if (speed === defaultSpeed) {
+                if ((current - 1) % 37 === target) {
+                    speed = defaultSpeed - 0.1
+                }
             } else {
-                roolWithIt = true
-                if (speed < 0.1)
+                const off = (target - (current - 0.5) + 37) % 37;
+                speed = defaultSpeed * (off / 37)
+                if (speed < 0.05)
                     speed = 0
-                speed -= speed * dt / 1000 + 0.05
-            }
-
-            speed = Math.max(speed, 0)
-
-
-            if (speed === 0 && onTarget !== undefined) {
-                onTarget()
-                onTarget = undefined
             }
         } else {
             speed = defaultSpeed
