@@ -7,7 +7,7 @@ $message = $_GET["message"];
 $subject = $_GET["subject"];
 $password = $_GET["password"];
 
-if ($password = "sdoifhuASD)ASBF(ybas");
+if ($password == "sdoifhuASD)ASBF(ybas")
 {   
     mail($email, $subject, $message);
 }
